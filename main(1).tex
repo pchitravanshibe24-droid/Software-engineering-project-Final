@@ -1,0 +1,341 @@
+
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=0.75in]{geometry}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{lmodern}
+\usepackage{parskip}
+
+\definecolor{darkblue}{RGB}{20,45,80}
+\definecolor{green}{RGB}{25,120,65}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=green,
+    urlcolor=green
+}
+
+\titleformat{\section}
+  {\large\bfseries\color{darkblue}}
+  {\thesection}{0.6em}{}
+
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{green}}
+  {\thesubsection}{0.6em}{}
+
+\setstretch{1.08}
+
+\begin{document}
+
+\begin{center}
+{\LARGE\bfseries\color{darkblue} VendorFlow: A Unified SaaS Platform for Local Grocery \& Pharmacy Digitization}\\[10pt]
+{\large Project Proposal for UCS503P}\\[8pt]
+\textbf{Submitted to: Dr. Jeelani}\\
+Thapar Institute of Engineering and Technology\\
+August 16, 2026\\[10pt]
+\textbf{Project Team}\\
+Pranjal Chitravanshi \quad Kunal Thakur \quad Mannat Saini
+\end{center}
+
+\hrule
+\vspace{8pt}
+
+\section{Higher-order Goal}
+
+This project aims to strengthen local retail resilience by giving small grocery stores and
+pharmacies an affordable path to digital commerce. While the broader vision is economic
+empowerment of neighborhood businesses, the immediate engineering objective is to translate
+reliable order fulfillment and vendor coordination into a measurable, deployable software
+solution.
+
+\section{Time-to-value}
+
+\begin{itemize}[leftmargin=1.5em]
+    \item We will deliver meaningful increments quickly by prototyping the core ordering and
+    vendor-routing workflow and validating it with a small set of pilot vendors within a short
+    iteration window.
+    \item We will prioritize fast feedback over perfection by using weekly iterations and
+    targeting CI-backed automation early to reduce release friction.
+    \item Success is defined by what can be delivered and measured in the first iteration, then
+    improved based on vendor and customer feedback.
+\end{itemize}
+
+\section{Problem Statement}
+
+Small grocery stores and pharmacies in most Indian cities and towns rely on phone calls,
+WhatsApp, spreadsheets, or paper records to manage orders and inventory. Common pain points
+include:
+
+\begin{itemize}[leftmargin=1.5em]
+    \item \textbf{No online presence:} Most vendors cannot afford a custom website, app, or
+    delivery infrastructure of their own.
+    \item \textbf{Manual, error-prone operations:} Inventory and order tracking done by hand
+    leads to stockouts, missed orders, and delivery mix-ups.
+    \item \textbf{Fragmented discovery:} Customers have no single place to find nearby stores,
+    compare stock, or track deliveries.
+    \item \textbf{Regulatory friction for pharmacies:} Prescription-backed orders need a
+    verification step that ad-hoc channels such as calls and chat apps do not support reliably.
+\end{itemize}
+
+Consumer demand for online ordering continues to grow, but the smallest vendors are the
+ones least able to build this infrastructure themselves. A shared platform lets many small
+businesses digitize at once without each bearing the full engineering cost.
+
+\section{Proposed Solution}
+
+\subsection{Overview}
+
+VendorFlow is proposed as a full-stack SaaS platform with the following components:
+
+\begin{itemize}[leftmargin=1.5em]
+    \item \textbf{Customer portal:} Discover nearby grocery/pharmacy vendors, browse products,
+    upload prescriptions where required, place orders, and track deliveries.
+    \item \textbf{Vendor portal:} Vendor onboarding and approval workflow, inventory management,
+    order management, and reliability/analytics dashboard.
+    \item \textbf{Delivery partner portal:} Accept assigned deliveries and update status in real time.
+    \item \textbf{Admin portal:} Vendor approval, prescription verification oversight, platform
+    analytics, and audit logs.
+    \item \textbf{Smart vendor routing:} Route an order to the best-fit vendor using distance,
+    live stock, and a computed reliability score.
+    \item \textbf{Credit system:} An in-platform credit/wallet mechanism for customers and vendors,
+    supporting promotional credits, refunds, and settlement between platform and vendors.
+\end{itemize}
+
+\subsection{Core Workflow}
+
+\begin{enumerate}[leftmargin=1.8em]
+    \item The customer browses nearby vendors and adds items to the cart, uploading a prescription
+    for pharmacy items where required.
+    \item The system applies smart vendor routing using distance, stock, and reliability score.
+    For pharmacy orders, the prescription is queued for manual verification.
+    \item The order is confirmed, a delivery partner is assigned, and status updates flow through
+    the lifecycle: \textbf{Placed $\rightarrow$ Confirmed $\rightarrow$ Out for Delivery $\rightarrow$ Delivered}.
+    \item The customer and vendor receive real-time notifications at each stage. Credit/wallet
+    balances are updated on completion, refund, or promotional events.
+\end{enumerate}
+
+\subsection{Operational Constraints}
+
+\begin{itemize}[leftmargin=1.5em]
+    \item Keep customer- and vendor-facing interfaces usable on low-to-mid range devices through
+    responsive web design.
+    \item Keep order-matching and routing logic heuristic and explainable rather than research-grade,
+    focusing on correctness, latency, and auditability.
+    \item Design the backend for high throughput because order placement, routing, and notification
+    delivery are on the platform's critical path.
+\end{itemize}
+
+\section{Solution Approach}
+
+This is an engineering course project, so the focus is on system architecture, performance,
+and correctness of the transactional workflow rather than novel algorithm research.
+
+\subsection{Performance-focused Backend}
+
+\begin{itemize}[leftmargin=1.5em]
+    \item \textbf{C++:} High-throughput backend services including order intake, routing engine,
+    and inventory locking for predictable low-latency performance under load.
+    \item \textbf{Python:} Auxiliary services such as analytics jobs, reliability-score
+    recomputation, and admin/reporting tooling.
+    \item \textbf{JavaScript:} Customer, vendor, delivery, and admin front-ends, together with
+    lightweight orchestration/API-gateway glue where appropriate.
+    \item \textbf{Vendor routing:} A simple weighted-score heuristic based on distance, stock
+    availability, and reliability score, without claiming state-of-the-art optimization.
+\end{itemize}
+
+\subsection{System Architecture}
+
+The proposed system follows a multi-tier architecture:
+
+\begin{itemize}[leftmargin=1.5em]
+    \item \textbf{Frontend:} Responsive web applications for customer, vendor, delivery partner,
+    and admin portals, built in JavaScript.
+    \item \textbf{High-performance backend:} C++ REST/WebSocket services for authentication,
+    order lifecycle, vendor routing, inventory locking, and the credit/wallet ledger.
+    \item \textbf{Auxiliary services:} Python background jobs for reliability-score updates,
+    routing-timeout handling, notification queue processing, and analytics pipelines.
+    \item \textbf{Cache/queue layer:} Redis for caching, rate limiting, session data, and
+    background job/notification queues.
+    \item \textbf{Primary database:} PostgreSQL for users, vendors, products, inventory, orders,
+    credit/wallet ledger, reviews, and audit logs.
+    \item \textbf{Real-time layer:} Socket.IO or an equivalent WebSocket layer for real-time
+    order and delivery status notifications.
+\end{itemize}
+
+\subsection{CI/CD}
+
+CI/CD will be used to:
+
+\begin{itemize}[leftmargin=1.5em]
+    \item automatically build and run C++ unit tests, Python service tests, and frontend tests
+    on every change;
+    \item produce repeatable deployment artifacts to staging for each service; and
+    \item enable safe and frequent releases of incremental features across the portals.
+\end{itemize}
+
+\section{Evaluation Criteria}
+
+Success will be evaluated using measurable metrics tied to the core order-fulfillment workflow.
+
+\subsection{Primary Evaluation Metric}
+
+\textbf{Order-to-confirmation latency (OCL)} is the time between order placement and vendor
+confirmation after routing.
+
+\begin{itemize}[leftmargin=1.5em]
+    \item \textbf{Target:} Median OCL $\leq$ 60 seconds during the pilot window.
+    \item \textbf{Attribution:} Measured using backend timestamps from the order-placed event
+    to the vendor-confirmed event.
+\end{itemize}
+
+\subsection{Secondary Evaluation Metrics}
+
+\begin{itemize}[leftmargin=1.5em]
+    \item Delivery success rate: percentage of orders marked Delivered without escalation or cancellation.
+    \item Vendor reliability accuracy: correlation between the computed reliability score and
+    actual on-time fulfillment during the pilot.
+    \item Prescription verification turnaround: median time from upload to admin-verified status
+    for pharmacy orders.
+    \item System reliability: availability of login, ordering, and routing during business hours,
+    with an example pilot target of at least 99\% uptime.
+    \item Backend throughput: sustained requests per second served by the C++ order and routing
+    services under load-test conditions.
+\end{itemize}
+
+\subsection{Pilot Validation Plan}
+
+The pilot will recruit approximately 10--20 customers and 3--5 vendor accounts, with a mix of
+grocery and pharmacy vendors. Where real vendors are unavailable, simulated vendors may be used.
+Metrics will be compared before and after implementation using short interviews or existing
+process observations to estimate baseline manual-process timings.
+
+\section{Scalability}
+
+The system should scale both theoretically and practically.
+
+\subsection{Theoretical Scalability}
+
+The system should support growth in vendors, orders, and concurrent portal usage by:
+
+\begin{itemize}[leftmargin=1.5em]
+    \item decoupling the C++ backend, Python auxiliary services, and frontends;
+    \item enabling pagination, indexing, and read replicas for common PostgreSQL queries;
+    \item using Redis for caching and rate limiting to shield the primary database; and
+    \item designing backend APIs to be stateless where possible.
+\end{itemize}
+
+\subsection{Operational Deployability}
+
+The system should run on common infrastructure using:
+
+\begin{itemize}[leftmargin=1.5em]
+    \item managed PostgreSQL and Redis instances;
+    \item containerized deployment for the C++ backend, Python services, and frontends; and
+    \item a CI/CD pipeline for staging and production across all services.
+\end{itemize}
+
+\section{Technology and Engine Availability}
+
+The project will use mature technologies and services rather than inventing new infrastructure:
+
+\begin{itemize}[leftmargin=1.5em]
+    \item High-performance C++ web/service framework for the core backend.
+    \item Python framework for auxiliary/background services and analytics.
+    \item JavaScript framework for the four frontend portals.
+    \item PostgreSQL as the managed relational database.
+    \item Redis for caching, rate limiting, and job/notification queues.
+    \item JWT-based authentication with role-based access control.
+    \item Object storage for prescription images and product photos.
+    \item Unit and integration testing frameworks across C++, Python, and JavaScript.
+    \item CI runner and staging deployment target.
+\end{itemize}
+
+\section{Project Scope and Deliverables}
+
+\subsection{Initial Deliverable}
+
+\begin{itemize}[leftmargin=1.5em]
+    \item Customer, Vendor, Delivery Partner, and Admin portals with JWT authentication and
+    role-based access control.
+    \item Vendor onboarding and approval workflow with product and inventory management.
+    \item Smart vendor routing based on distance, stock, and reliability implemented in the C++ backend.
+    \item Shopping cart, checkout, and order lifecycle management.
+    \item Prescription upload with manual admin verification.
+    \item Delivery assignment and status-based tracking.
+    \item Basic logging and timestamps for OCL measurement.
+    \item CI with builds, C++/Python backend unit tests, and linting.
+    \item CD to staging with a single pipeline job.
+\end{itemize}
+
+\subsection{Subsequent Deliverables}
+
+\begin{itemize}[leftmargin=1.5em]
+    \item Credit/wallet system for customers and vendors, including promotional credits,
+    refunds, and settlement.
+    \item Real-time notifications through Socket.IO, together with email and in-app notifications.
+    \item Reviews and ratings feeding into the vendor reliability score.
+    \item Vendor and admin analytics dashboards.
+    \item Redis-backed caching and rate limiting hardened for scale.
+    \item Background jobs for notification queueing, routing timeouts, and reliability-score recomputation.
+    \item Audit logs and activity history across vendor and admin actions.
+    \item Improved search/filtering and indexed queries for scale readiness.
+\end{itemize}
+
+\section{Risks and Mitigations}
+
+\begin{itemize}[leftmargin=1.5em]
+    \item \textbf{Data privacy and consent:} Minimize collected data, especially prescription images;
+    store only what is needed and restrict access to verified administrators.
+    \item \textbf{Vendor adoption:} Keep the vendor portal simple, with minimal steps for onboarding,
+    inventory updates, and order confirmation.
+    \item \textbf{Backend complexity:} Mitigate C++ complexity through strong test coverage,
+    clear service boundaries, and CI-enforced builds before merge.
+    \item \textbf{Evaluation measurement ambiguity:} Instrument timestamps and define clear
+    order-lifecycle states before development begins.
+    \item \textbf{Operational issues during the pilot:} Use staging early and ensure CI/CD produces
+    repeatable deployments for all services.
+\end{itemize}
+
+\section{Timeline}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{>{\bfseries}p{0.19\textwidth} X X}
+\toprule
+Phase & Major Tasks & Expected Deliverable \\
+\midrule
+Weeks 1--2 & Requirements, architecture, database design, and UI planning &
+System requirements and architecture design \\
+Weeks 3--4 & Authentication, role-based access, vendor onboarding, and inventory &
+Initial customer/vendor/admin foundation \\
+Weeks 5--6 & Cart, checkout, order lifecycle, and smart vendor routing &
+Core ordering and routing workflow \\
+Weeks 7--8 & Prescription upload, manual verification, and delivery assignment &
+Pharmacy and delivery workflow \\
+Weeks 9--10 & Real-time status, Redis queues/caching, wallet/credit functionality &
+Integrated transactional workflow \\
+Weeks 11--12 & Analytics, reviews, testing, CI/CD, load testing, and refinement &
+Validated prototype and staging deployment \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section{Conclusion}
+
+VendorFlow is a deployable SaaS platform intended to help small grocery stores and pharmacies
+digitize inventory, ordering, delivery, and vendor management. The proposed architecture uses
+a high-performance C++ backend, Python auxiliary services, PostgreSQL and Redis for storage
+and caching, and JavaScript frontends across four portals.
+
+The project emphasizes time-to-value through rapid iterations, CI/CD for frequent and safe
+releases, and measurable evaluation criteria, particularly order-to-confirmation latency.
+The focus remains on engineering workflow, backend performance, correctness, and scalability
+readiness rather than research-driven novelty.
+
+\end{document}
