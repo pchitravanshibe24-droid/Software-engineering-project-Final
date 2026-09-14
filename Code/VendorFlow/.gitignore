@@ -1,0 +1,27 @@
+# Backend build output
+backend/target/
+
+# Maven wrapper cache
+backend/.mvn/
+
+# Frontend build output
+frontend/dist/
+frontend/node_modules/
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+*.class
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Environment / secrets
+backend/src/main/resources/application-local.properties
+*.env
